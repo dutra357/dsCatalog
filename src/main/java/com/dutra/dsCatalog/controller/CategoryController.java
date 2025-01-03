@@ -1,6 +1,7 @@
 package com.dutra.dsCatalog.controller;
 
 import com.dutra.dsCatalog.entities.Category;
+import com.dutra.dsCatalog.services.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +14,15 @@ import java.util.List;
 @RequestMapping(value = "/categories")
 public class CategoryController {
 
+    private final CategoryService service;
+
+    public CategoryController(CategoryService service) {
+        this.service = service;
+    }
+
     @GetMapping
     public ResponseEntity<List<Category>> findAll() {
-        List<Category> list = new ArrayList<>();
 
-        list.add(new Category(1L, "Books"));
-        list.add(new Category(2L, "Electronics"));
-
-        return ResponseEntity.ok().body(list);
+        return ResponseEntity.ok().body(service.findAll());
     }
 }
