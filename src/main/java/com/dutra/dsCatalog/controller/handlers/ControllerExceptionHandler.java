@@ -1,7 +1,7 @@
 package com.dutra.dsCatalog.controller.handlers;
 
 import com.dutra.dsCatalog.controller.exceptions.Error;
-import com.dutra.dsCatalog.services.exceptions.EntityNotFoundException;
+import com.dutra.dsCatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +14,8 @@ import java.time.Instant;
 @RestControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Error> entityNotFoundException(EntityNotFoundException exception, HttpServletRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Error> entityNotFoundException(ResourceNotFoundException exception, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         Error error = new Error(Instant.now(), status.value(), "Resource not found.", exception.getMessage(), request.getRequestURI());
 

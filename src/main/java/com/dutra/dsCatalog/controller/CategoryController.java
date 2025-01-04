@@ -40,4 +40,14 @@ public class CategoryController {
 
         return ResponseEntity.created(uri).body(categorySaved);
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryIn) {
+        CategoryDto categoryUpDate = service.updateCategory(id, categoryIn);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                .path("/{id}").buildAndExpand(categoryUpDate.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(categoryUpDate);
+    }
 }
