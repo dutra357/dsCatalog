@@ -1,6 +1,7 @@
 package com.dutra.dsCatalog.services;
 
 import com.dutra.dsCatalog.dtos.CategoryDto;
+import com.dutra.dsCatalog.entities.Category;
 import com.dutra.dsCatalog.repositories.CategoryRepository;
 import com.dutra.dsCatalog.services.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,13 @@ public class CategoryService {
         return new CategoryDto(repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Category not found!")
         ));
+    }
+
+    @Transactional
+    public CategoryDto save(CategoryDto newCategory) {
+        Category category = new Category();
+        category.setName(newCategory.getName());
+
+        return new CategoryDto(repository.save(category));
     }
 }
