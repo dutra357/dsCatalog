@@ -1,5 +1,6 @@
 package com.dutra.dsCatalog.controller;
 
+import com.dutra.dsCatalog.dtos.CategoryDto;
 import com.dutra.dsCatalog.entities.Category;
 import com.dutra.dsCatalog.services.CategoryService;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> findAll() {
-
+    public ResponseEntity<List<CategoryDto>> findAll() {
         return ResponseEntity.ok().body(service.findAll());
     }
 }

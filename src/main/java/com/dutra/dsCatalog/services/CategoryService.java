@@ -1,5 +1,6 @@
 package com.dutra.dsCatalog.services;
 
+import com.dutra.dsCatalog.dtos.CategoryDto;
 import com.dutra.dsCatalog.entities.Category;
 import com.dutra.dsCatalog.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class CategoryService {
         this.repository = repository;
     }
 
-    public List<Category> findAll() {
-        return repository.findAll();
+    public List<CategoryDto> findAll() {
+        return repository.findAll().stream().map(category -> new CategoryDto(category)).toList();
     }
 }
