@@ -3,9 +3,13 @@ package com.dutra.dsCatalog.services;
 import com.dutra.dsCatalog.dtos.CategoryDto;
 import com.dutra.dsCatalog.entities.Category;
 import com.dutra.dsCatalog.repositories.CategoryRepository;
+import com.dutra.dsCatalog.services.exceptions.DataBaseException;
 import com.dutra.dsCatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -49,6 +53,21 @@ public class CategoryService {
             return new CategoryDto(repository.save(category));
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("ID not found!");
+        }
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Resource not found!");
+        }
+
+        try {
+            repository.deleteById(id);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseException("Referential integrity violation.");
         }
     }
 }

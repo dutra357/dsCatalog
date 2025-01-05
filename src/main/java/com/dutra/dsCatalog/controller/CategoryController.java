@@ -50,4 +50,10 @@ public class CategoryController {
 
         return ResponseEntity.created(uri).body(categoryUpDate);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
