@@ -16,6 +16,7 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private Double price;
     private String imgUrl;
@@ -23,6 +24,9 @@ public class Product implements Serializable {
     private Instant date;
 
     @ManyToMany
+    @JoinTable(name = "tb_product_category",
+        joinColumns = @JoinColumn(name = "product_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
     public Product() {}
