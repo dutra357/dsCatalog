@@ -1,15 +1,16 @@
 package com.dutra.dsCatalog.controller;
 
 import com.dutra.dsCatalog.dtos.CategoryDto;
-import com.dutra.dsCatalog.entities.Category;
 import com.dutra.dsCatalog.services.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/categories")
@@ -22,8 +23,14 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> findAll() {
-        return ResponseEntity.ok().body(service.findAll());
+    public ResponseEntity<Page<CategoryDto>> findAll(Pageable pageable,
+                                                     @RequestParam(name = "page", defaultValue = "0") int page,
+                                                     @RequestParam(name = "size", defaultValue = "12") int size,
+                                                     @RequestParam(name = "sort", defaultValue = "name") String sort,
+                                                     @RequestParam(name = "direction", defaultValue = "ASC") String direction
+                                                     ) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), sort);
+        return ResponseEntity.ok().body(service.findAllPaged(pageRequest));
     }
 
     @GetMapping(value = "/{id}")

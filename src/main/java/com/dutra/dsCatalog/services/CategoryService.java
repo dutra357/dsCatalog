@@ -7,7 +7,8 @@ import com.dutra.dsCatalog.services.exceptions.DataBaseException;
 import com.dutra.dsCatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,10 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryDto> findAll() {
         return repository.findAll().stream().map(category -> new CategoryDto(category)).toList();
+    }
+    @Transactional(readOnly = true)
+    public Page<CategoryDto> findAllPaged(PageRequest pageRequest) {
+        return repository.findAll(pageRequest).map(category -> new CategoryDto(category));
     }
 
     @Transactional(readOnly = true)
