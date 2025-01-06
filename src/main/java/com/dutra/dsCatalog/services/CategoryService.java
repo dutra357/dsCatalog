@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +26,8 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryDto> findAll() {
-        return repository.findAll().stream().map(category -> new CategoryDto(category)).toList();
-    }
-    @Transactional(readOnly = true)
-    public Page<CategoryDto> findAllPaged(PageRequest pageRequest) {
-        return repository.findAll(pageRequest).map(category -> new CategoryDto(category));
+    public Page<CategoryDto> findAllPaged(Pageable pageable) {
+        return repository.findAll(pageable).map(category -> new CategoryDto(category));
     }
 
     @Transactional(readOnly = true)

@@ -23,14 +23,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductDto>> findAll(Pageable pageable,
-                                                    @RequestParam(name = "page", defaultValue = "0") int page,
-                                                    @RequestParam(name = "size", defaultValue = "12") int size,
-                                                    @RequestParam(name = "sort", defaultValue = "name") String sort,
-                                                    @RequestParam(name = "direction", defaultValue = "ASC") String direction
-                                                     ) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), sort);
-        return ResponseEntity.ok().body(service.findAllPaged(pageRequest));
+    public ResponseEntity<Page<ProductDto>> findAll(Pageable pageable) {
+        return ResponseEntity.ok().body(service.findAllPaged(pageable));
     }
 
     @GetMapping(value = "/{id}")
