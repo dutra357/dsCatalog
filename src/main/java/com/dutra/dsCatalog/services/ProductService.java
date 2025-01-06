@@ -1,7 +1,10 @@
 package com.dutra.dsCatalog.services;
 
+import com.dutra.dsCatalog.dtos.CategoryDto;
 import com.dutra.dsCatalog.dtos.ProductDto;
+import com.dutra.dsCatalog.entities.Category;
 import com.dutra.dsCatalog.entities.Product;
+import com.dutra.dsCatalog.repositories.CategoryRepository;
 import com.dutra.dsCatalog.repositories.ProductRepository;
 import com.dutra.dsCatalog.services.exceptions.DataBaseException;
 import com.dutra.dsCatalog.services.exceptions.ResourceNotFoundException;
@@ -17,9 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository repository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository repository) {
+    public ProductService(ProductRepository repository, CategoryRepository categoryRepository) {
         this.repository = repository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional(readOnly = true)
@@ -29,17 +34,16 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDto findById(Long id) {
-        return new ProductDto(repository.findById(id).orElseThrow(
+        Product product = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Product not found!")
-        ));
+        );
+        return new ProductDto(product, product.getCategories());
     }
 
     @Transactional
     public ProductDto save(ProductDto newProduct) {
         Product product = new Product();
-        product.setName(newProduct.getName());
-
-        return new ProductDto(repository.save(product));
+        return new ProductDto(repository.save(builderProduct(product, newProduct)));
     }
 
     @Transactional
@@ -47,9 +51,7 @@ public class ProductService {
         try {
             Product product = repository.getReferenceById(id);
 
-            product.setName(productIn.getName());
-
-            return new ProductDto(repository.save(product));
+            return new ProductDto(repository.save(builderProduct(product, productIn)));
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("ID not found!");
         }
@@ -68,5 +70,20 @@ public class ProductService {
         } catch (DataIntegrityViolationException e) {
             throw new DataBaseException("Referential integrity violation.");
         }
+    }
+
+    private Product builderProduct(Product product, ProductDto productDto) {
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setImgUrl(productDto.getImgUrl());
+
+        product.getCategories().clear();
+        for (CategoryDto categoryDto : productDto.getCategories()) {
+            Category category = categoryRepository.getReferenceById(categoryDto.getId());
+            product.getCategories().add(category);
+        }
+
+        return product;
     }
 }
