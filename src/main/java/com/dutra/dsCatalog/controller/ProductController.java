@@ -43,13 +43,13 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDto> updateCategory(@PathVariable Long id, @RequestBody ProductDto productIn) {
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto productIn) {
         ProductDto productUpdate = service.updateProduct(id, productIn);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path("/{id}").buildAndExpand(productUpdate.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(productUpdate);
+        return ResponseEntity.ok(productUpdate);
     }
 
     @DeleteMapping(value = "/{id}")
