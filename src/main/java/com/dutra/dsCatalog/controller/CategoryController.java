@@ -49,7 +49,8 @@ public class CategoryController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path("/{id}").buildAndExpand(categoryUpDate.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(categoryUpDate);
+        return ResponseEntity.ok().location(uri).body(categoryUpDate);
+
     }
 
     @DeleteMapping(value = "/{id}")

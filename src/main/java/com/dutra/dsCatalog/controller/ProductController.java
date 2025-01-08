@@ -49,7 +49,7 @@ public class ProductController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path("/{id}").buildAndExpand(productUpdate.getId()).toUri();
 
-        return ResponseEntity.ok(productUpdate);
+        return ResponseEntity.ok().location(uri).body(productUpdate);
     }
 
     @DeleteMapping(value = "/{id}")
